@@ -73,12 +73,6 @@ Use API magic 🪄 to integrate with your apps.
 
 📊 AI Analytics & Logging
 
-🎉 Meet the Team
-
-Your Name (AI Overlord 🤓)
-
-[Awesome Contributors]
-
 📜 License
 
 MIT License (because sharing is caring!)
