@@ -50,7 +50,7 @@ st.components.v1.html(lottie_html, height=150, width=150)
 # Streamlit app layout with custom styling for black font
 st.markdown("""
     <h1 style='color: black; text-align: center;'>Baymax - Your friendly neighborhood AI</h1>
-    <p style='color: black; text-align: center;'>Hello Human! I am Baymax. I am here to fetch you valuable information whenever you need some!</p>
+    <p style='color: black; text-align: center;'>Hello Human! I am Baymax. I was created by Rajit DR. I am here to fetch you valuable information whenever you need some!</p>
 """, unsafe_allow_html=True)
 
 
