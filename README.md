@@ -32,15 +32,15 @@ Baymaxx is your AI buddy, powered by Retrieval-Augmented Generation (RAG), desig
 
 Backend: Python (FastAPI, Flask)
 
-LLMs: GPT, Llama, Falcon, or even your own fine-tuned beast!
+LLMs: Vertex AI (Gemini 2.0 Flash - API Experimental model 09/02/2025)
 
-Vector DBs: FAISS, Pinecone, ChromaDB
+Vector DBs: Pinecone
 
-Frontend: React.js / Next.js
+Frontend: Streamlit
 
-Data Magic: Hugging Face Transformers, LangChain
+Data Magic: Hugging Face Transformers (seq2seq - RAG Transformer)
 
-Deploy Like a Boss: Docker, Kubernetes, AWS/GCP/Azure
+Deploy Like a Boss: Netlify (created a .toml file while creating the environment)
 
 🎬 Getting Started (Super Easy!)
 
@@ -50,11 +50,9 @@ git clone https://github.com/your-repo/baymaxx-chatbot.git
 cd baymaxx-chatbot
 
 Install dependencies 📦
-
 pip install -r requirements.txt
 
-Fire it up! 🚀
-
+Fire it up! 🚀x
 python app.py
 
 🏆 How to Use
