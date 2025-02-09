@@ -5,7 +5,7 @@ import os
 import requests
 import time
 
-st.set_page_config(layout="wide", page_title="Baymax - Friendly Neighborhood AI", page_icon="🤖")
+st.set_page_config(layout="wide", page_title="Baymax - Friendly Neighborhood AI By Rajit D R", page_icon="🤖")
 
 # Function to load Lottie animations from a URL
 def load_lottie_url(url: str):
