@@ -4,7 +4,7 @@
 
 Baymaxx is your AI buddy, powered by Retrieval-Augmented Generation (RAG), designed to chat like a pro on domain-specific topics! Whether you're diving into finance, healthcare, law, or even space exploration, Baymaxx has got your back! 🌍🚀
 
-🔥 Why You'll Love It
+🔥 Why You'll Love It ?
 
 🧠 Smart & Domain-Savvy: Knows its stuff, so you get expert-level replies.
 
@@ -18,7 +18,7 @@ Baymaxx is your AI buddy, powered by Retrieval-Augmented Generation (RAG), desig
 
 📡 API & Web Interface: Chat with Baymaxx from any device.
 
-🛠️ How It Works
+🛠️ How It Works ?
 
 🕵️ Search Mode: Fetches relevant info from its knowledge vault.
 
@@ -30,7 +30,7 @@ Baymaxx is your AI buddy, powered by Retrieval-Augmented Generation (RAG), desig
 
 ⚙️ Tech Stack (a.k.a. The Nerdy Stuff)
 
-Backend: Python (FastAPI, Flask)
+Backend: Python (FastAPI, Flask) :
 
 LLMs: Vertex AI (Gemini 2.0 Flash - API Experimental model 09/02/2025)
 
@@ -55,7 +55,7 @@ pip install -r requirements.txt
 Fire it up! 🚀x
 python app.py
 
-🏆 How to Use
+🏆 How to Use ?
 
 Train Baymaxx with your own vector embeddings.
 
@@ -79,5 +79,5 @@ MIT License (because sharing is caring!)
 
 📬 Contact
 
-Got questions? Email [your email] or drop an issue in the repo! 💌
+Got questions? Email [rajitkumar962@gmail.com] or drop an issue in the repo! 💌
 
