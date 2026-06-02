@@ -14,7 +14,7 @@ def load_lottie_url(url: str):
     return response.json()
 
 # Set up the Google Generative AI API key
-genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
+genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
 generation_config = {
     "temperature": 1,
