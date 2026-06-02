@@ -1,21 +1,37 @@
 import streamlit as st
-from google import genai
+import google.generativeai as genai
 import time
 import requests
 
 st.set_page_config(layout="wide", page_title="Baymax - Friendly Neighborhood AI By Rajit D R", page_icon="🤖")
 
-# Function to load Lottie animations from a URL
 def load_lottie_url(url: str):
     response = requests.get(url)
     if response.status_code != 200:
         return None
     return response.json()
 
-# Set up the Google Gen AI client
-client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
+# Configure with REST transport for AQ. keys
+genai.configure(
+    api_key=st.secrets["GOOGLE_API_KEY"],
+    transport="rest"
+)
 
-# Add the Lottie animation using HTML
+generation_config = {
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 40,
+    "max_output_tokens": 8192,
+    "response_mime_type": "text/plain",
+}
+
+model = genai.GenerativeModel(
+    model_name="gemini-2.0-flash",
+    generation_config=generation_config,
+)
+
+chat_session = model.start_chat(history=[])
+
 lottie_html = """
 <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
 <div style="display: flex; justify-content: right; align-items: right; height: 500vh;">
@@ -27,7 +43,6 @@ lottie_html = """
 
 st.components.v1.html(lottie_html, height=150, width=150)
 
-# Streamlit app layout
 st.markdown("""
     <h1 style='color: black; text-align: center;'>Baymax - Your friendly neighborhood AI</h1>
     <p style='color: black; text-align: center;'>Hello Human! I am Baymax. I was created by Rajit DR. I am here to fetch you valuable information whenever you need some!</p>
@@ -81,13 +96,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state
 if 'history' not in st.session_state:
     st.session_state.history = []
 if 'last_message_displayed' not in st.session_state:
     st.session_state.last_message_displayed = True
 
-# Typewriting effect function
 def typewrite_effect(text):
     placeholder = st.empty()
     typewritten_text = ""
@@ -97,40 +110,15 @@ def typewrite_effect(text):
         time.sleep(0.006)
     placeholder.markdown(f'<div class="ai-message">{text}</div>', unsafe_allow_html=True)
 
-# Build conversation history for API
-def build_contents():
-    contents = []
-    for message in st.session_state.history:
-        if message['role'] == 'user':
-            contents.append({"role": "user", "parts": [{"text": message['text']}]})
-        else:
-            contents.append({"role": "model", "parts": [{"text": message['text']}]})
-    return contents
-
-# Handle input submission
 def handle_input():
     user_input = st.session_state.user_input
     if user_input:
-        # Append user input to history
         st.session_state.history.append({'role': 'user', 'text': user_input})
-
-        # Build full conversation history
-        contents = build_contents()
-
-        # Send message using new SDK
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=contents,
-        )
-
-        # Append AI response to history
+        response = chat_session.send_message(user_input)
         st.session_state.history.append({'role': 'chatbot', 'text': response.text})
         st.session_state.last_message_displayed = False
-
-        # Clear the input box
         st.session_state.user_input = ""
 
-# Display chat history
 for idx, message in enumerate(st.session_state.history):
     if message['role'] == 'user':
         st.markdown(f'<div class="message-box"><div class="user-message">{message["text"]}</div></div>', unsafe_allow_html=True)
@@ -140,11 +128,10 @@ for idx, message in enumerate(st.session_state.history):
     else:
         st.markdown(f'<div class="message-box"><div class="ai-message">{message["text"]}</div></div>', unsafe_allow_html=True)
 
-# Input box
 st.text_input("You:", key="user_input", placeholder="Type your message here...", on_change=handle_input)
 
-# Reset button
 if st.button('Reset Chat'):
     st.session_state.history = []
     st.session_state.last_message_displayed = True
+    chat_session = model.start_chat(history=[])
     st.write("Chat has been reset.")
