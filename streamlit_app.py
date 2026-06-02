@@ -1,8 +1,7 @@
 import streamlit as st
-from streamlit_lottie import st_lottie
-import google.generativeai as genai
-import requests
+from google import genai
 import time
+import requests
 
 st.set_page_config(layout="wide", page_title="Baymax - Friendly Neighborhood AI By Rajit D R", page_icon="🤖")
 
@@ -13,24 +12,8 @@ def load_lottie_url(url: str):
         return None
     return response.json()
 
-# Set up the Google Generative AI API key
-genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-
-generation_config = {
-    "temperature": 1,
-    "top_p": 0.95,
-    "top_k": 40,
-    "max_output_tokens": 8192,
-    "response_mime_type": "text/plain",
-}
-
-model = genai.GenerativeModel(
-    model_name="gemini-2.0-flash",
-    generation_config=generation_config,
-)
-
-# Start the chatbot session
-chat_session = model.start_chat(history=[])
+# Set up the Google Gen AI client
+client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
 
 # Add the Lottie animation using HTML
 lottie_html = """
@@ -44,12 +27,11 @@ lottie_html = """
 
 st.components.v1.html(lottie_html, height=150, width=150)
 
-# Streamlit app layout with custom styling for black font
+# Streamlit app layout
 st.markdown("""
     <h1 style='color: black; text-align: center;'>Baymax - Your friendly neighborhood AI</h1>
     <p style='color: black; text-align: center;'>Hello Human! I am Baymax. I was created by Rajit DR. I am here to fetch you valuable information whenever you need some!</p>
 """, unsafe_allow_html=True)
-
 
 st.markdown("""
     <style>
@@ -99,7 +81,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
 # Initialize session state
 if 'history' not in st.session_state:
     st.session_state.history = []
@@ -108,13 +89,23 @@ if 'last_message_displayed' not in st.session_state:
 
 # Typewriting effect function
 def typewrite_effect(text):
-    placeholder = st.empty()  # Create a placeholder
+    placeholder = st.empty()
     typewritten_text = ""
     for char in text:
         typewritten_text += char
         placeholder.markdown(f'<div class="ai-message">{typewritten_text}</div>', unsafe_allow_html=True)
-        time.sleep(0.006)  # Reduced sleep time for smoother typing effect
+        time.sleep(0.006)
     placeholder.markdown(f'<div class="ai-message">{text}</div>', unsafe_allow_html=True)
+
+# Build conversation history for API
+def build_contents():
+    contents = []
+    for message in st.session_state.history:
+        if message['role'] == 'user':
+            contents.append({"role": "user", "parts": [{"text": message['text']}]})
+        else:
+            contents.append({"role": "model", "parts": [{"text": message['text']}]})
+    return contents
 
 # Handle input submission
 def handle_input():
@@ -122,12 +113,20 @@ def handle_input():
     if user_input:
         # Append user input to history
         st.session_state.history.append({'role': 'user', 'text': user_input})
-        response = chat_session.send_message(user_input)
-        
+
+        # Build full conversation history
+        contents = build_contents()
+
+        # Send message using new SDK
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=contents,
+        )
+
         # Append AI response to history
         st.session_state.history.append({'role': 'chatbot', 'text': response.text})
-        st.session_state.last_message_displayed = False  # Mark the latest message as not displayed yet
-        
+        st.session_state.last_message_displayed = False
+
         # Clear the input box
         st.session_state.user_input = ""
 
@@ -136,19 +135,16 @@ for idx, message in enumerate(st.session_state.history):
     if message['role'] == 'user':
         st.markdown(f'<div class="message-box"><div class="user-message">{message["text"]}</div></div>', unsafe_allow_html=True)
     elif idx == len(st.session_state.history) - 1 and not st.session_state.last_message_displayed:
-        # Apply typewriting effect only to the most recent AI message
         typewrite_effect(message["text"])
         st.session_state.last_message_displayed = True
     else:
-        # Display previous AI messages directly
         st.markdown(f'<div class="message-box"><div class="ai-message">{message["text"]}</div></div>', unsafe_allow_html=True)
 
-# Input box for user to type their message
+# Input box
 st.text_input("You:", key="user_input", placeholder="Type your message here...", on_change=handle_input)
 
-# Button to reset the chat
+# Reset button
 if st.button('Reset Chat'):
     st.session_state.history = []
     st.session_state.last_message_displayed = True
-    chat_session = model.start_chat(history=[])
     st.write("Chat has been reset.")
