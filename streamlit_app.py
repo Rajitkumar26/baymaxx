@@ -1,7 +1,6 @@
 import streamlit as st
 from streamlit_lottie import st_lottie
 import google.generativeai as genai
-import os
 import requests
 import time
 
@@ -15,8 +14,6 @@ def load_lottie_url(url: str):
     return response.json()
 
 # Set up the Google Generative AI API key
-api_key = 'AIzaSyB3n1FTI2oiL_G7M7WqzdroNcQ-dJiFgyA'
-os.environ["GOOGLE_API_KEY"] = api_key
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
 generation_config = {
@@ -28,7 +25,7 @@ generation_config = {
 }
 
 model = genai.GenerativeModel(
-    model_name="gemini-2.0-flash-exp",
+    model_name="gemini-2.0-flash",
     generation_config=generation_config,
 )
 
