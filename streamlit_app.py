@@ -1,5 +1,5 @@
 import streamlit as st
-import google.generativeai as genai
+from groq import Groq
 import time
 import requests
 
@@ -11,26 +11,10 @@ def load_lottie_url(url: str):
         return None
     return response.json()
 
-# Configure with REST transport for AQ. keys
-genai.configure(
-    api_key=st.secrets["GOOGLE_API_KEY"],
-    transport="rest"
-)
+# Set up the Groq client
+client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-generation_config = {
-    "temperature": 1,
-    "top_p": 0.95,
-    "top_k": 40,
-    "max_output_tokens": 8192,
-    "response_mime_type": "text/plain",
-}
-
-model = genai.GenerativeModel(
-    model_name="gemini-2.0-flash",
-    generation_config=generation_config,
-)
-
-chat_session = model.start_chat(history=[])
+MODEL_NAME = "llama-3.3-70b-versatile"
 
 lottie_html = """
 <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
@@ -110,12 +94,30 @@ def typewrite_effect(text):
         time.sleep(0.006)
     placeholder.markdown(f'<div class="ai-message">{text}</div>', unsafe_allow_html=True)
 
+def build_messages():
+    messages = [{"role": "system", "content": "You are Baymax, a friendly and caring AI assistant created by Rajit DR."}]
+    for message in st.session_state.history:
+        role = "user" if message['role'] == 'user' else "assistant"
+        messages.append({"role": role, "content": message['text']})
+    return messages
+
 def handle_input():
     user_input = st.session_state.user_input
     if user_input:
         st.session_state.history.append({'role': 'user', 'text': user_input})
-        response = chat_session.send_message(user_input)
-        st.session_state.history.append({'role': 'chatbot', 'text': response.text})
+
+        messages = build_messages()
+
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=messages,
+            temperature=1,
+            max_tokens=2048,
+        )
+
+        reply_text = response.choices[0].message.content
+
+        st.session_state.history.append({'role': 'chatbot', 'text': reply_text})
         st.session_state.last_message_displayed = False
         st.session_state.user_input = ""
 
@@ -133,5 +135,4 @@ st.text_input("You:", key="user_input", placeholder="Type your message here...",
 if st.button('Reset Chat'):
     st.session_state.history = []
     st.session_state.last_message_displayed = True
-    chat_session = model.start_chat(history=[])
     st.write("Chat has been reset.")
