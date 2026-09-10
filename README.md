@@ -1,83 +1,69 @@
-🤖 Baymaxx - The Cool RAG-Based Chatbot
+# Baymaxx
 
-🚀 What is Baymaxx?
+> A Retrieval-Augmented Generation (RAG) chatbot for domain-specific question answering.
 
-Baymaxx is your AI buddy, powered by Retrieval-Augmented Generation (RAG), designed to chat like a pro on domain-specific topics! Whether you're diving into finance, healthcare, law, or even space exploration, Baymaxx has got your back! 🌍🚀
+## Overview
 
-🔥 Why You'll Love It ?
+Baymaxx combines information retrieval with large language model generation to produce responses grounded in a custom knowledge base. The project is designed as a flexible foundation for domain-specific AI assistants.
 
-🧠 Smart & Domain-Savvy: Knows its stuff, so you get expert-level replies.
+## Architecture
 
-🤝 Hybrid AI Brain: Uses both memory (retrieval) & creativity (generation) for ultra-relevant answers.
+1. **Query** — The user submits a question through the application interface or API.
+2. **Retrieval** — Relevant information is retrieved from the vector database.
+3. **Augmentation** — Retrieved context is provided to the language model.
+4. **Generation** — The model generates a context-aware response.
 
-🏗️ Make It Yours: Customize with your own knowledge base.
+## Technology
 
-⚡ Lightning Fast: Fetches & generates responses in a snap!
+- **Language:** Python
+- **Backend:** FastAPI, Flask
+- **LLM:** Google Vertex AI / Gemini
+- **Vector Database:** Pinecone
+- **ML:** Hugging Face Transformers
+- **Interface:** Streamlit
 
-🌎 Works Anywhere: Deployable across industries.
+## Getting Started
 
-📡 API & Web Interface: Chat with Baymaxx from any device.
+### 1. Clone the repository
 
-🛠️ How It Works ?
+```bash
+git clone https://github.com/Rajitkumar26/baymaxx.git
+cd baymaxx
+```
 
-🕵️ Search Mode: Fetches relevant info from its knowledge vault.
+### 2. Install dependencies
 
-🧩 Smart Augmentation: Picks out the juiciest details.
-
-✍️ Generates Magic: Uses AI wizardry to craft the perfect response.
-
-🎯 Fine-Tuned Replies: Ensures your answers make sense & hit the mark.
-
-⚙️ Tech Stack (a.k.a. The Nerdy Stuff)
-
-Backend: Python (FastAPI, Flask) :
-
-LLMs: Vertex AI (Gemini 2.0 Flash - API Experimental model 09/02/2025)
-
-Vector DBs: Pinecone
-
-Frontend: Streamlit
-
-Data Magic: Hugging Face Transformers (seq2seq - RAG Transformer)
-
-Deploy Like a Boss: Netlify (created a .toml file while creating the environment)
-
-🎬 Getting Started (Super Easy!)
-
-Clone the repo 🧑‍💻
-
-git clone https://github.com/your-repo/baymaxx-chatbot.git
-cd baymaxx-chatbot
-
-Install dependencies 📦
+```bash
 pip install -r requirements.txt
+```
 
-Fire it up! 🚀x
+### 3. Configure environment variables
+
+Add the credentials and configuration required by the selected LLM and vector database services.
+
+### 4. Run the application
+
+```bash
 python app.py
+```
 
-🏆 How to Use ?
+## Use Cases
 
-Train Baymaxx with your own vector embeddings.
+Baymaxx can be adapted for knowledge assistants in areas such as documentation, education, finance, healthcare, legal information, and other domain-specific applications.
 
-Deploy it anywhere—cloud, local, you name it!
+## Roadmap
 
-Use API magic 🪄 to integrate with your apps.
+- Multilingual interaction
+- Voice-enabled conversations
+- Improved retrieval and evaluation
+- Analytics and observability
+- Additional deployment options
 
-🔮 Future Plans (a.k.a. Cool Stuff Coming Soon)
+## License
 
-🌍 Talk in Multiple Languages
+MIT License
 
-🗣️ Voice Chat Support
+## Author
 
-🏢 Enterprise Integrations (CRM, ERP, etc.)
-
-📊 AI Analytics & Logging
-
-📜 License
-
-MIT License (because sharing is caring!)
-
-📬 Contact
-
-Got questions? Email [rajitkumar962@gmail.com] or drop an issue in the repo! 💌
-
+**Rajitkumar26**  
+[GitHub](https://github.com/Rajitkumar26) · [Email](mailto:rajitkumar962@gmail.com)
